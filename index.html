@@ -3,65 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El conejito de hoy</title>
+    <meta name="description" content="Esta página muestra noticias sobre la Universidad UK">
+    <title>Noticias sobre la Universidad UK</title>
     <style>
+        /* Estilo general */
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f9f9f9;
+            background-color: #607d8b; /* Azul grisáceo */
+            color: #ff9800; /* Anaranjado */
             margin: 0;
             padding: 0;
+            text-align: center;
         }
+
         h1 {
-            color: #4CAF50;
-            margin-top: 50px;
-        }
-        .container {
             margin-top: 20px;
+            font-size: 2.5rem;
         }
-        img {
-            max-width: 90%;
-            height: auto;
-            border: 5px solid #4CAF50;
+
+        .news-container {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #455a64; /* Un tono más oscuro de azul grisáceo */
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: left;
         }
+
+        .news-container h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .news-container p {
+            margin: 10px 0;
+        }
+
+        .news-container a {
+            color: #ffc107; /* Amarillo */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .news-container a:hover {
+            text-decoration: underline;
+        }
+
         .loading {
-            font-size: 18px;
-            color: #555;
+            font-size: 1.2rem;
+            color: #ffcc80; /* Un tono más claro de anaranjado */
         }
     </style>
 </head>
 <body>
-    <h1>El conejito de hoy</h1>
-    <div class="container">
-        <p class="loading">Cargando una imagen de un conejo...</p>
-        <img id="rabbit-image" src="" alt="Conejito" style="display: none;">
+    <h1>Noticias sobre la Universidad UK</h1>
+    <div class="news-container">
+        <p class="loading">Cargando noticias...</p>
     </div>
 
     <script>
-        // URL de búsqueda de imágenes aleatorias
-        const searchQuery = "cute bunny";
-        const imageApiUrl = `https://source.unsplash.com/featured/?${encodeURIComponent(searchQuery)}`;
+        const apiKey = "TU_API_KEY_AQUI"; // Reemplaza con tu clave de NewsAPI
+        const query = "Universidad UK";
+        const apiUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&apiKey=${apiKey}`;
 
-        // Referencias a elementos de la página
-        const rabbitImage = document.getElementById("rabbit-image");
-        const loadingText = document.querySelector(".loading");
+        const newsContainer = document.querySelector(".news-container");
 
-        // Cargar una imagen aleatoria
-        function loadRandomRabbit() {
-            rabbitImage.src = imageApiUrl;
-            rabbitImage.onload = () => {
-                loadingText.style.display = "none";
-                rabbitImage.style.display = "block";
-            };
-            rabbitImage.onerror = () => {
-                loadingText.textContent = "No se pudo cargar la imagen. Intenta recargar la página.";
-            };
+        async function fetchRandomNews() {
+            try {
+                // Fetch noticias desde la API
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                if (data.articles && data.articles.length > 0) {
+                    // Selecciona una noticia aleatoria
+                    const randomIndex = Math.floor(Math.random() * data.articles.length);
+                    const article = data.articles[randomIndex];
+
+                    // Muestra la noticia
+                    newsContainer.innerHTML = `
+                        <h2>${article.title}</h2>
+                        <p>${article.description || "Sin descripción disponible."}</p>
+                        <a href="${article.url}" target="_blank">Leer más</a>
+                    `;
+                } else {
+                    newsContainer.innerHTML = "<p>No se encontraron noticias sobre 'Universidad UK'.</p>";
+                }
+            } catch (error) {
+                newsContainer.innerHTML = `<p>Error al cargar las noticias: ${error.message}</p>`;
+            }
         }
 
-        // Llamar a la función al cargar la página
-        window.onload = loadRandomRabbit;
+        // Llama a la función al cargar la página
+        fetchRandomNews();
     </script>
 </body>
 </html>
