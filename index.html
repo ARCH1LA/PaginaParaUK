@@ -1,1 +1,67 @@
-<h1>Esto es solo una prueva</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El conejito de hoy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-top: 50px;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+            border: 5px solid #4CAF50;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .loading {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>El conejito de hoy</h1>
+    <div class="container">
+        <p class="loading">Cargando una imagen de un conejo...</p>
+        <img id="rabbit-image" src="" alt="Conejito" style="display: none;">
+    </div>
+
+    <script>
+        // URL de búsqueda de imágenes aleatorias
+        const searchQuery = "cute bunny";
+        const imageApiUrl = `https://source.unsplash.com/featured/?${encodeURIComponent(searchQuery)}`;
+
+        // Referencias a elementos de la página
+        const rabbitImage = document.getElementById("rabbit-image");
+        const loadingText = document.querySelector(".loading");
+
+        // Cargar una imagen aleatoria
+        function loadRandomRabbit() {
+            rabbitImage.src = imageApiUrl;
+            rabbitImage.onload = () => {
+                loadingText.style.display = "none";
+                rabbitImage.style.display = "block";
+            };
+            rabbitImage.onerror = () => {
+                loadingText.textContent = "No se pudo cargar la imagen. Intenta recargar la página.";
+            };
+        }
+
+        // Llamar a la función al cargar la página
+        window.onload = loadRandomRabbit;
+    </script>
+</body>
+</html>
